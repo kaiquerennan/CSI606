@@ -1,0 +1,33 @@
+// Prisma schema file
+// Define os modelos Usuario e Vendas
+
+generator client {
+  provider = "prisma-client-js"
+  output =   "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String   @unique
+}
+
+model Vendas {
+  id         Int      @id @default(autoincrement())
+  valor      Float
+  data       DateTime @default(now())
+  usuarioId  Int
+}
+
+model Produto {
+  id  Int             @id @default(autoincrement())
+  descricao           String
+  preco               Float
+  grupo               String?
+  estoque             Decimal     @db.Decimal(10,2)
+}
