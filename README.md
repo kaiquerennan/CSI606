@@ -51,4 +51,4 @@ Para manter o foco e garantir a entrega dentro do prazo, as seguintes funcionali
 
 ## 4. Protótipos
 
-Protótipos para as páginas (Principal e de relatŕoios) foram elaborados, e podem ser encontrados em https://www.figma.com/design/6zpmOL3MxSq4GYYT65mZMo/Prot%C3%B3tipo-Web?node-id=0-1&t=4pVHn5Hz0aKszpfG-1
+Protótipos para as páginas (Principal e de relatórios) foram elaborados, e podem ser encontrados em https://www.figma.com/design/6zpmOL3MxSq4GYYT65mZMo/Prot%C3%B3tipo-Web?node-id=0-1&t=4pVHn5Hz0aKszpfG-1
