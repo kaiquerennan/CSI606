@@ -12,16 +12,20 @@ datasource db {
 }
 
 model Usuario {
-  id        Int      @id @default(autoincrement())
-  nome      String
-  email     String   @unique
+  id     Int      @id @default(autoincrement())
+  nome   String
+  email  String   @unique
+  vendas Vendas[] // Campo virtual para relação inversa
 }
 
 model Vendas {
-  id         Int      @id @default(autoincrement())
-  valor      Float
-  data       DateTime @default(now())
-  usuarioId  Int
+  id        Int      @id @default(autoincrement())
+  valor     Float
+  data      DateTime @default(now())
+
+  // Definição da relação (Foreign Key)
+  usuarioId Int
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
 }
 
 model Produto {
