@@ -1,6 +1,3 @@
-// Prisma schema file
-// Define os modelos Usuario e Vendas
-
 generator client {
   provider = "prisma-client-js"
   output =   "../generated/prisma"
