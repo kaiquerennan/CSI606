@@ -45,9 +45,9 @@ Este projeto implementará as seguintes funcionalidades principais:
 
 Para manter o foco e garantir a entrega dentro do prazo, as seguintes funcionalidades **não** serão consideradas neste projeto:
 
-- **Previsão de Vendas (Forecasting):** Não serão incluídos modelos estatísticos ou de _Machine Learning_ para projeção de vendas futuras.
-- **Integração de Escrita (Write-Back):** A ferramenta será estritamente _read-only_. Não haverá possibilidade de inserir, editar ou excluir dados na fonte de origem (CRM/ERP).
-- **Aplicativo Móvel Nativo:** O desenvolvimento será focado na **interface web** (desktop e tablet). Não haverá criação de um app móvel nativo.
+- **Previsão de Vendas:** Não serão incluídos modelos estatísticos ou de _Machine Learning_ para projeção de vendas futuras.
+- **Integração de Escrita:** A ferramenta será estritamente _read-only_. Não haverá possibilidade de inserir, editar ou excluir dados na fonte de origem (CRM/ERP).
+- **Aplicativo Móvel** O desenvolvimento será focado na **interface web** (desktop e tablet). Não haverá criação de um app móvel nativo.
 
 ## 4. Protótipos
 
