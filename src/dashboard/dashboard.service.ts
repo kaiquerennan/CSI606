@@ -24,4 +24,26 @@ export class DashboardService {
       clientesAtivos,
     };
   }
+
+  async getVendasmes(mes: number) {
+    // Debug: get distinct months
+    const monthsResult = await this.prisma.$queryRaw<{ month: number }[]>`
+      SELECT DISTINCT EXTRACT(MONTH FROM data) as month FROM "Vendas" ORDER BY month
+    `;
+    const months = monthsResult.map(r => Number(r.month));
+
+    const result = await this.prisma.$queryRaw<{ count: bigint }[]>`
+      SELECT COUNT(*) as count
+      FROM "Vendas"
+      WHERE EXTRACT(MONTH FROM data) = ${mes}
+    `;
+    const countMes = Number(result[0].count);
+
+    const totalResult = await this.prisma.$queryRaw<{ count: bigint }[]>`
+      SELECT COUNT(*) as count FROM "Vendas"
+    `;
+    const total = Number(totalResult[0].count);
+
+    return { countMes, total, months };
+  }
 }
