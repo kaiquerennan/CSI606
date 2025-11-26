@@ -39,9 +39,16 @@ export class DashboardService {
     WHERE EXTRACT(MONTH FROM data) = ${mes}
     `;
 
+    const totalMes = Number(totalmes[0].total);
+    const qtdMes = Number(countmes[0].count);
+
+    const ticketMedioMes =
+      totalMes > 0 ? Number(totalMes / qtdMes).toFixed(2) : 0;
+
     return {
       countmes: Number(countmes[0].count),
       totalmes: totalmes[0].total.toFixed(2),
+      ticketMedioMes,
     };
   }
 }
