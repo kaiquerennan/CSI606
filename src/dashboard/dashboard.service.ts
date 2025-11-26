@@ -15,7 +15,9 @@ export class DashboardService {
     const ticketMedio =
       totalVendas > 0 ? valorTotal._sum.valor / totalVendas : 0;
 
-    const clientesAtivos = await this.prisma.usuario.count();
+    const clientesAtivos = await this.prisma.usuario.count({
+      where: { ativo: true },
+    });
 
     return {
       totalVendas,

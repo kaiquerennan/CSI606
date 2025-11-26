@@ -12,7 +12,7 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log('🌱 Iniciando o seed...');
 
-  // Opcional: Limpar tabelas antes de criar (Cuidado em produção!)
+  // Opcional: Limpar tabelas antes de criar
   await prisma.vendas.deleteMany();
   await prisma.usuario.deleteMany();
   await prisma.produto.deleteMany();
@@ -28,6 +28,7 @@ async function main() {
         // Gera e-mail único usando timestamp e número sequencial
         email:
           `${faker.internet.username()}.${i}.${Date.now()}@example.com`.toLowerCase(),
+        ativo: Math.random() < 0.7,
       },
     });
     usuariosIds.push(usuario.id);
@@ -62,6 +63,7 @@ async function main() {
         estoque: parseFloat(
           faker.number.float({ min: 0, max: 100, multipleOf: 0.01 }).toFixed(2),
         ),
+        ativo: Math.random() < 0.7,
       },
     });
   }

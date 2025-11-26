@@ -13,7 +13,8 @@ model Usuario {
   id     Int      @id @default(autoincrement())
   nome   String
   email  String   @unique
-  vendas Vendas[] // Campo virtual para relação inversa
+  vendas Vendas[]
+  ativo  Boolean   @default(true)
 }
 
 model Vendas {
@@ -32,4 +33,6 @@ model Produto {
   preco               Float
   grupo               String?
   estoque             Decimal     @db.Decimal(10,2)
+  ativo               Boolean     @default(true)
 }
+
