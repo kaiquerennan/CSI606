@@ -33,7 +33,7 @@ export class DashboardService {
     `;
 
     const totalmes = await this.prisma.$queryRaw<{ total: number }[]>`
-    SELECT SUM(VALOR) as total FROM "Vendas"
+    SELECT  COALESCE(SUM(VALOR),0) as total FROM "Vendas"
     WHERE EXTRACT(MONTH FROM data) = ${mes}
     `;
 
