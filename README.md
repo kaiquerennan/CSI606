@@ -4,7 +4,7 @@
 
 # 📊 Dashboard de Análise de Vendas
 
-Este projeto consiste no desenvolvimento de um **Dashboard Interativo de Análise de Vendas**, projetado para transformar dados brutos em _insights_ acionáveis. Nosso objetivo é fornecer uma ferramenta de Business Intelligence (BI) para visualizar, monitorar e analisar o desempenho de vendas da organização, facilitando a tomada de decisões estratégicas e a identificação rápida de tendências.
+Este projeto consiste no desenvolvimento de um **Dashboard Interativo de Análise de Vendas**, projetado para transformar dados brutos em _insights_ acionáveis. Meu objetivo é fornecer uma ferramenta para visualizar, monitorar e analisar o desempenho de vendas da organização, facilitando a tomada de decisões estratégicas.
 
 ---
 
