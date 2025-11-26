@@ -1,30 +1,30 @@
 import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
 import { ClientesService } from './clientes.service';
 
-@Controller('users')
+@Controller('clientes')
 export class ClientesController {
-  constructor(private readonly usersService: ClientesService) {}
+  constructor(private readonly clientesService: ClientesService) {}
 
   // GET /users
   @Get()
   async findAll() {
-    return this.usersService.findAll();
+    return this.clientesService.findAll();
   }
 
   // GET /users/:id
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.usersService.findById(Number(id));
+    return this.clientesService.findById(Number(id));
   }
 
   // POST /users
   @Post()
   async create(@Body('nome') nome: string, @Body('email') email: string) {
-    return this.usersService.create(nome, email);
+    return this.clientesService.create(nome, email);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
-    return this.usersService.delete(Number(id));
+    return this.clientesService.delete(Number(id));
   }
 }

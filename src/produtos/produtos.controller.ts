@@ -12,12 +12,12 @@ export class ProdutosController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: String) {
+  async findById(@Param('id') id: string) {
     return this.produtosService.findById(Number(id));
   }
 
   @Delete('id')
-  async delete(@Param('id') id: String) {
+  async delete(@Param('id') id: string) {
     return this.produtosService.delete(Number(id));
   }
 }

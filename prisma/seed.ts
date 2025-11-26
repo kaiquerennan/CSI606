@@ -45,7 +45,7 @@ async function main() {
     await prisma.vendas.create({
       data: {
         valor: parseFloat(faker.commerce.price({ min: 10, max: 500 })),
-        data: faker.date.recent({ days: 60 }), // Vendas dos últimos 60 dias
+        data: faker.date.recent({ days: 365 }), // Vendas dos últimos 60 dias
         usuarioId: randomUserId,
       },
     });
