@@ -3,6 +3,7 @@ import { PrismaClient } from '../generated/prisma';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import { fakerPT_BR as faker } from '@faker-js/faker'; // Usando português do Brasil
+import * as bcrypt from 'bcrypt';
 
 const connectionString = process.env.DATABASE_URL;
 const pool = new Pool({ connectionString });
@@ -33,6 +34,20 @@ async function main() {
     });
     usuariosIds.push(usuario.id);
   }
+
+  // Criar usuário de teste com senha
+  const hashedPassword = await bcrypt.hash('123456', 10);
+  const testUser = await prisma.usuario.create({
+    data: {
+      nome: 'Usuário Teste',
+      email: 'teste@example.com',
+      senha: hashedPassword,
+      ativo: true,
+    },
+  });
+  usuariosIds.push(testUser.id);
+  console.log('Usuário de teste criado: teste@example.com / 123456');
+  console.log(`ID do usuário teste: ${testUser.id}`);
 
   // --- 2. Criar Vendas ---
   console.log('💰 Criando vendas...');
