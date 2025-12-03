@@ -1,8 +1,8 @@
 generator client {
-  provider = "prisma-client-js"
-  engineType = "binary"
+  provider      = "prisma-client-js"
+  engineType    = "binary"
   binaryTargets = ["native"]
-  output   = "../generated/prisma"
+  output        = "../generated/prisma"
 }
 
 datasource db {
@@ -13,27 +13,41 @@ model Usuario {
   id     Int      @id @default(autoincrement())
   nome   String
   email  String   @unique
-  senha  String?  // Adicionado campo senha
+  senha  String? // Adicionado campo senha
   vendas Vendas[]
-  ativo  Boolean   @default(true)
+  ativo  Boolean  @default(true)
 }
 
 model Vendas {
-  id        Int      @id @default(autoincrement())
+  id        Int           @id @default(autoincrement())
   valor     Float
-  data      DateTime @default(now())
-
-  // Definição da relação (Foreign Key)
+  data      DateTime      @default(now())
   usuarioId Int
-  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+  usuario   Usuario       @relation(fields: [usuarioId], references: [id])
+  itens     itensVendas[]
 }
 
 model Produto {
-  id  Int             @id @default(autoincrement())
-  descricao           String
-  preco               Float
-  grupo               String?
-  estoque             Decimal     @db.Decimal(10,2)
-  ativo               Boolean     @default(true)
+  id        Int           @id @default(autoincrement())
+  descricao String
+  preco     Float
+  grupo     String?
+  estoque   Decimal       @db.Decimal(10, 2)
+  ativo     Boolean       @default(true)
+  categoria String
+  itens     itensVendas[]
 }
 
+model itensVendas {
+  id            Int     @id @default(autoincrement())
+  vendaId       Int
+  produtoId     Int
+  quantidade    Decimal @db.Decimal(10, 2)
+  valorUnitario Decimal @db.Decimal(10, 2)
+  valorTotal    Decimal @db.Decimal(10, 2)
+
+  vendas  Vendas  @relation(fields: [vendaId], references: [id])
+  produto Produto @relation(fields: [produtoId], references: [id])
+
+  @@map("itens_vendas")
+}
