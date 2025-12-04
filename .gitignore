@@ -3,6 +3,8 @@ dist
 generated
 data
 .env
+public.pem
+private.pem
 
 
 /generated/prisma
