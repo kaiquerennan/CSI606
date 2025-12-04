@@ -1,43 +1,43 @@
-import { PrismaClient } from '../generated/prisma'
-import { PrismaPg } from '@prisma/adapter-pg'
-import { Pool } from 'pg'
-import { fakerPT_BR as faker } from '@faker-js/faker'
-import * as bcrypt from 'bcrypt'
+import { PrismaClient } from '../generated/prisma';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
+import { fakerPT_BR as faker } from '@faker-js/faker';
+import * as bcrypt from 'bcrypt';
 
-const connectionString = process.env.DATABASE_URL
-const pool = new Pool({ connectionString })
-const adapter = new PrismaPg(pool)
-const prisma = new PrismaClient({ adapter })
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log('🌱 Iniciando o seed...')
+  console.log('🌱 Iniciando o seed...');
 
   // Limpa tudo na ordem correta (evita erro de FK)
-  await prisma.itensVendas.deleteMany()
-  await prisma.vendas.deleteMany()
-  await prisma.usuario.deleteMany()
-  await prisma.produto.deleteMany()
+  await prisma.itensVendas.deleteMany();
+  await prisma.vendas.deleteMany();
+  await prisma.usuario.deleteMany();
+  await prisma.produto.deleteMany();
 
   // =============================
   // 1. Criar Usuários
   // =============================
-  console.log('👤 Criando usuários...')
-  const usuariosIds: number[] = []
+  console.log('👤 Criando usuários...');
+  const usuariosIds: number[] = [];
 
   for (let i = 0; i < 300; i++) {
     const usuario = await prisma.usuario.create({
       data: {
         nome: faker.person.fullName(),
-        email: `${faker.internet.username()}.${i}.${Date.now()}@example.com`.toLowerCase(),
+        email:
+          `${faker.internet.username()}.${i}.${Date.now()}@example.com`.toLowerCase(),
         ativo: Math.random() < 0.7,
       },
-    })
-
-    usuariosIds.push(usuario.id)
+    });
+    usuariosIds.push(usuario.id);
   }
 
   // Usuário de teste com senha
-  const hashed = await bcrypt.hash('123456', 10)
+  const hashed = await bcrypt.hash('123456', 10);
   const testUser = await prisma.usuario.create({
     data: {
       nome: 'Usuário Teste',
@@ -45,16 +45,17 @@ async function main() {
       senha: hashed,
       ativo: true,
     },
-  })
-
-  usuariosIds.push(testUser.id)
-  console.log(`Usuário de teste criado: teste@example.com / 123456 (ID: ${testUser.id})`)
+  });
+  usuariosIds.push(testUser.id);
+  console.log(
+    `Usuário de teste criado: teste@example.com / 123456 (ID: ${testUser.id})`,
+  );
 
   // =============================
   // 2. Criar Produtos
   // =============================
-  console.log('📦 Criando produtos...')
-  const produtosIds: number[] = []
+  console.log('📦 Criando produtos...');
+  const produtosIds: number[] = [];
 
   for (let i = 0; i < 200; i++) {
     const produto = await prisma.produto.create({
@@ -66,48 +67,49 @@ async function main() {
         ativo: Math.random() < 0.8,
         categoria: faker.commerce.department(),
       },
-    })
-
-    produtosIds.push(produto.id)
+    });
+    produtosIds.push(produto.id);
   }
 
   // =============================
   // 3. Criar Vendas + Itens
   // =============================
-  console.log('💰 Criando vendas com itens...')
+  console.log('💰 Criando vendas com itens...');
 
   for (let i = 0; i < 400; i++) {
     const randomUser =
-      usuariosIds[Math.floor(Math.random() * usuariosIds.length)]
+      usuariosIds[Math.floor(Math.random() * usuariosIds.length)];
 
+    // Criar venda com data aleatória
     const vendaCriada = await prisma.vendas.create({
       data: {
-        valor: 0, // vamos atualizar depois do cálculo dos itens
-        data: faker.date.recent({ days: 365 }),
+        valor: 0, // será atualizado depois
+        data: faker.date.between({
+          from: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
+          to: new Date(),
+        }),
         usuarioId: randomUser,
       },
-    })
+    });
 
-    let valorTotalDaVenda = 0
+    let valorTotalDaVenda = 0;
 
     // Criar entre 1 e 5 itens
-    const qtdItens = faker.number.int({ min: 1, max: 5 })
+    const qtdItens = faker.number.int({ min: 1, max: 5 });
 
     for (let j = 0; j < qtdItens; j++) {
       const produtoId =
-        produtosIds[Math.floor(Math.random() * produtosIds.length)]
+        produtosIds[Math.floor(Math.random() * produtosIds.length)];
 
       const produto = await prisma.produto.findUnique({
         where: { id: produtoId },
-      })
+      });
+      if (!produto) continue;
 
-      if (!produto) continue
-
-      const quantidade = faker.number.int({ min: 1, max: 10 })
-      const valorUnitario = Number(produto.preco)
-      const valorItem = quantidade * valorUnitario
-
-      valorTotalDaVenda += valorItem
+      const quantidade = faker.number.int({ min: 1, max: 10 });
+      const valorUnitario = Number(produto.preco);
+      const valorItem = quantidade * valorUnitario;
+      valorTotalDaVenda += valorItem;
 
       await prisma.itensVendas.create({
         data: {
@@ -116,27 +118,29 @@ async function main() {
           quantidade,
           valorUnitario,
           valorTotal: valorItem,
+          data: faker.date.between({
+            from: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
+            to: new Date(),
+          }),
         },
-      })
+      });
     }
 
-    // Atualiza valor total da venda
+    // Atualiza valor total da venda apenas uma vez
     await prisma.vendas.update({
       where: { id: vendaCriada.id },
-      data: {
-        valor: valorTotalDaVenda,
-      },
-    })
+      data: { valor: valorTotalDaVenda },
+    });
   }
 
-  console.log('✅ Seed finalizado com sucesso!')
+  console.log('✅ Seed finalizado com sucesso!');
 }
 
 main()
   .catch((e) => {
-    console.error(e)
-    process.exit(1)
+    console.error(e);
+    process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect()
-  })
+    await prisma.$disconnect();
+  });

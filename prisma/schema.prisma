@@ -39,12 +39,13 @@ model Produto {
 }
 
 model itensVendas {
-  id            Int     @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   vendaId       Int
   produtoId     Int
-  quantidade    Decimal @db.Decimal(10, 2)
-  valorUnitario Decimal @db.Decimal(10, 2)
-  valorTotal    Decimal @db.Decimal(10, 2)
+  quantidade    Decimal  @db.Decimal(10, 2)
+  valorUnitario Decimal  @db.Decimal(10, 2)
+  valorTotal    Decimal  @db.Decimal(10, 2)
+  data          DateTime @default(now())
 
   vendas  Vendas  @relation(fields: [vendaId], references: [id])
   produto Produto @relation(fields: [produtoId], references: [id])

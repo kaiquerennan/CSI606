@@ -1,14 +1,14 @@
-import { Controller, Get } from '@nestjs/common'
-import { RelatoriosService } from './relatorios.service'
+import { Controller, Get, Param } from '@nestjs/common';
+import { RelatoriosService } from './relatorios.service';
 
 @Controller('relatorios')
 export class RelatoriosController {
   constructor(private readonly relatoriosService: RelatoriosService) {}
 
-    @Get('vendas-por-categoria')
-      getVendasPorCategoria() {
-        return this.relatoriosService.vendasPorCategoria();
-      }
-
+  @Get('vendas-por-categoria/:dias')
+  getVendasPorCategoria(@Param('dias') dias: string) {
+    return this.relatoriosService.vendasPorCategoria(
+      dias ? Number(dias) : undefined,
+    );
   }
-
+}
