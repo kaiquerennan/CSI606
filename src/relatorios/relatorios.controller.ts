@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { RelatoriosService } from './relatorios.service';
 
 @Controller('relatorios')
@@ -10,5 +10,10 @@ export class RelatoriosController {
     return this.relatoriosService.vendasPorCategoria(
       dias ? Number(dias) : undefined,
     );
+  }
+
+  @Get('frequencia-de-compras')
+  getFrequencia(@Query('dias') dias = '30') {
+    return this.relatoriosService.frequencia(Number(dias));
   }
 }

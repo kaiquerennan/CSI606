@@ -33,4 +33,27 @@ export class RelatoriosService {
     }
     return vendasPorCategoria;
   }
+
+  async frequencia(dias?) {
+    const dataLimite = new Date();
+    dataLimite.setDate(dataLimite.getDate() - dias);
+
+    return await this.prisma.vendas.groupBy({
+      by: ['usuarioId'],
+      where: {
+        data: {
+          gte: dataLimite,
+        },
+      },
+      _count: {
+        id: true,
+      },
+      orderBy: {
+        _count: {
+          id: 'desc',
+        },
+      },
+      take: 5,
+    });
+  }
 }
