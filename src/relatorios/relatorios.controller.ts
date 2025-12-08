@@ -16,4 +16,9 @@ export class RelatoriosController {
   getFrequencia(@Query('dias') dias = '30') {
     return this.relatoriosService.frequencia(Number(dias));
   }
+
+  @Get('vendas-por-meses/:meses')
+  getVendasPorMes(@Param('meses') meses: string) {
+    return this.relatoriosService.vendasPorMes(Number(meses));
+  }
 }
