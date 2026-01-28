@@ -19,11 +19,38 @@ export class DashboardService {
       where: { ativo: true },
     });
 
+    // Filtrar vendas de hoje
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+
+    const vendashoje = await this.prisma.vendas.aggregate({
+      _sum: { valor: true },
+      where: {
+        data: {
+          gte: startOfToday,
+          lte: endOfToday,
+        },
+      },
+    });
+
+    const totalProdutos = await this.prisma.produto.count();
+
+    const vendasPendentes = await this.prisma.vendas.count({
+      where: { status: 'pendente' },
+    });
+
     return {
       totalVendas,
       valorTotal: valorTotal._sum.valor.toFixed(2),
       ticketMedio: ticketMedio.toFixed(2),
       clientesAtivos,
+      vendasHoje: vendashoje._sum.valor
+        ? vendashoje._sum.valor.toFixed(2)
+        : '0.00',
+      totalProdutos,
+      vendasPendentes,
     };
   }
 

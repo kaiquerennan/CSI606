@@ -17,8 +17,9 @@ export class RelatoriosController {
     return this.relatoriosService.frequencia(Number(dias));
   }
 
-  @Get('vendas-por-meses/:meses')
-  getVendasPorMes(@Param('meses') meses: string) {
+  @Get('vendas-por-meses')
+  getVendasPorMes(@Query('meses') meses: string) {
+    const quantidadeMeses = meses ? Number(meses) : 3;
     return this.relatoriosService.vendasPorMes(Number(meses));
   }
 }

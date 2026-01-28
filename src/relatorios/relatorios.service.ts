@@ -14,10 +14,10 @@ export class RelatoriosService {
       dataInicio.setDate(dataInicio.getDate() - dias);
 
       vendasPorCategoria = await this.prisma.$queryRaw<any[]>`
-        SELECT p.CATEGORIA as categoria, 
+        SELECT p.CATEGORIA as categoria,
                SUM(iv.quantidade)::text as quantidade_vendidas
         FROM "itens_vendas" iv INNER JOIN "Produto" p
-        ON iv."produtoId" = p.id 
+        ON iv."produtoId" = p.id
         WHERE iv.data >=${dataInicio}
         GROUP BY p.CATEGORIA LIMIT 5
       `;
@@ -57,7 +57,7 @@ export class RelatoriosService {
     });
   }
 
-  async vendasPorMes(quantidadeMeses: number = 3) {
+  async vendasPorMes(quantidadeMeses) {
     const hoje = new Date();
     const dataInicial = new Date(
       hoje.getFullYear(),

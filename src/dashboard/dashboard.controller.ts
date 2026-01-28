@@ -10,8 +10,4 @@ export class DashboardController {
     return this.dashboardService.getOverview();
   }
 
-  @Get('vendas-mes/:mes')
-  getVendasMes(@Param('mes') mes: string) {
-    return this.dashboardService.getVendasmes(Number(mes));
-  }
 }

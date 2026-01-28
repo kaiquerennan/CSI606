@@ -76,11 +76,16 @@ async function main() {
   // =============================
   console.log('💰 Criando vendas com itens...');
 
+  const statusPossiveis = ["concluida", "pendente", "excluida"]; // novos status
+
   for (let i = 0; i < 400; i++) {
     const randomUser =
       usuariosIds[Math.floor(Math.random() * usuariosIds.length)];
 
-    // Criar venda com data aleatória
+    // Escolher status aleatório
+    const status = statusPossiveis[Math.floor(Math.random() * statusPossiveis.length)];
+
+    // Criar venda com data aleatória e status
     const vendaCriada = await prisma.vendas.create({
       data: {
         valor: 0, // será atualizado depois
@@ -89,6 +94,7 @@ async function main() {
           to: new Date(),
         }),
         usuarioId: randomUser,
+        status, 
       },
     });
 

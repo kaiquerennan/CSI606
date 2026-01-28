@@ -6,7 +6,9 @@ export class VendasController {
   constructor(private readonly vendasService: VendasService) {}
 
   @Get()
-  async findAll(@Query('status') status: string) {
-    return this.vendasService.findAll(status);
+  async findAll(@Query('status') status: string,
+                @Query('page') page: number,
+                @Query('perPage') perPage: number = 20) {
+    return this.vendasService.findAll(page, perPage, status);
   }
 }

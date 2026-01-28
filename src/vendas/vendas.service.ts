@@ -5,14 +5,22 @@ import { PrismaService } from '../prisma/prisma.service';
 export class VendasService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(status?: string) {
-    if (!status) {
-      return this.prisma.vendas.findMany();
-    }
-    return this.prisma.vendas.findMany({
-      where: {
-        status,
-      },
+  async findAll(page: number = 1, perPage: number = 20, status?: string) {
+    const skip = (page - 1) * perPage;
+    const take = perPage;
+
+    const where = status ? { status } : {};
+
+    const vendas = await this.prisma.vendas.findMany({
+      where: { status },
+      skip,
+      take,
     });
+
+    return {
+      vendas,
+      page,
+      perPage,
+    };
   }
 }
