@@ -1,5 +1,13 @@
-import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common'
-import { ClientesService } from './clientes.service'
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+} from '@nestjs/common';
+import { ClientesService } from './clientes.service';
 
 @Controller('clientes')
 export class ClientesController {
@@ -17,10 +25,24 @@ export class ClientesController {
     return this.clientesService.findById(Number(id));
   }
 
-  // POST /users
   @Post()
-  async create(@Body('nome') nome: string, @Body('email') email: string) {
-    return this.clientesService.create(nome, email);
+  async create(
+    @Body()
+    body: {
+      nome: string;
+      email: string;
+      documento: string;
+      natureza?: string;
+      ativo?: boolean;
+      senha?: string;
+    },
+  ) {
+    return this.clientesService.create(body);
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() body: any) {
+    return this.clientesService.update(Number(id), body);
   }
 
   @Delete(':id')

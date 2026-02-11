@@ -25,28 +25,47 @@ async function main() {
   const usuariosIds: number[] = [];
 
   for (let i = 0; i < 300; i++) {
+    const isPessoaFisica = Math.random() < 0.7;
+    const natureza = isPessoaFisica ? 'Física' : 'Jurídica';
+    const documento = isPessoaFisica
+      ? faker.helpers.replaceSymbols('###.###.###-##') // CPF
+      : faker.helpers.replaceSymbols('##.###.###/####-##');
+    const isFeminino = Math.random() < 0.5;
+    const sexo = isFeminino ? 'Feminino' : 'Masculino';
+
     const usuario = await prisma.usuario.create({
       data: {
-        nome: faker.person.fullName(),
+        nome: isPessoaFisica ? faker.person.fullName() : faker.company.name(),
         email:
           `${faker.internet.username()}.${i}.${Date.now()}@example.com`.toLowerCase(),
+        documento,
+        sexo,
+        natureza,
+        dataNascimento: faker.date.birthdate().toISOString().split('T')[0], // YYYY-MM-DD
         ativo: Math.random() < 0.7,
       },
     });
+
     usuariosIds.push(usuario.id);
   }
 
   // Usuário de teste com senha
   const hashed = await bcrypt.hash('123456', 10);
+
   const testUser = await prisma.usuario.create({
     data: {
       nome: 'Usuário Teste',
       email: 'teste@example.com',
       senha: hashed,
+      documento: '123.456.789-00', // pode usar faker.br.cpf() se preferir
+      natureza: 'Física',
+      dataNascimento: '1990-01-01',
       ativo: true,
     },
   });
+
   usuariosIds.push(testUser.id);
+
   console.log(
     `Usuário de teste criado: teste@example.com / 123456 (ID: ${testUser.id})`,
   );
@@ -68,6 +87,7 @@ async function main() {
         categoria: faker.commerce.department(),
       },
     });
+
     produtosIds.push(produto.id);
   }
 
@@ -76,31 +96,29 @@ async function main() {
   // =============================
   console.log('💰 Criando vendas com itens...');
 
-  const statusPossiveis = ["concluida", "pendente", "excluida"]; // novos status
+  const statusPossiveis = ['concluida', 'pendente', 'excluida'];
 
   for (let i = 0; i < 400; i++) {
     const randomUser =
       usuariosIds[Math.floor(Math.random() * usuariosIds.length)];
 
-    // Escolher status aleatório
-    const status = statusPossiveis[Math.floor(Math.random() * statusPossiveis.length)];
+    const status =
+      statusPossiveis[Math.floor(Math.random() * statusPossiveis.length)];
 
-    // Criar venda com data aleatória e status
     const vendaCriada = await prisma.vendas.create({
       data: {
-        valor: 0, // será atualizado depois
+        valor: 0, // atualizado depois
         data: faker.date.between({
           from: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
           to: new Date(),
         }),
         usuarioId: randomUser,
-        status, 
+        status,
       },
     });
 
     let valorTotalDaVenda = 0;
 
-    // Criar entre 1 e 5 itens
     const qtdItens = faker.number.int({ min: 1, max: 5 });
 
     for (let j = 0; j < qtdItens; j++) {
@@ -110,11 +128,13 @@ async function main() {
       const produto = await prisma.produto.findUnique({
         where: { id: produtoId },
       });
+
       if (!produto) continue;
 
       const quantidade = faker.number.int({ min: 1, max: 10 });
       const valorUnitario = Number(produto.preco);
       const valorItem = quantidade * valorUnitario;
+
       valorTotalDaVenda += valorItem;
 
       await prisma.itensVendas.create({
@@ -132,7 +152,6 @@ async function main() {
       });
     }
 
-    // Atualiza valor total da venda apenas uma vez
     await prisma.vendas.update({
       where: { id: vendaCriada.id },
       data: { valor: valorTotalDaVenda },

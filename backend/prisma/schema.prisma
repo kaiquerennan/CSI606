@@ -12,9 +12,14 @@ datasource db {
 model Usuario {
   id     Int      @id @default(autoincrement())
   nome   String
+  documento   String
   email  String   @unique
+  natureza String @default("Física")
   senha  String? // Adicionado campo senha
   vendas Vendas[]
+  sexo  String?
+  estadoCivil String?
+  dataNascimento  String
   ativo  Boolean  @default(true)
 }
 

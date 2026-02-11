@@ -1,92 +1,83 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-// Importar useRouter
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import {
-  LayoutDashboard,
-  Users,
-  Package,
-  ShoppingBag, // Importado para Vendas
-  Search,
   MoreVertical,
   Plus,
   Home,
-  Filter,
   ChevronLeft,
   ChevronRight,
   Menu,
   Settings,
 } from "lucide-react";
 
-// Interface
-interface Cliente {
+interface Produto {
   id: number;
-  nome: string;
-  email: string;
-  natureza: string;
-  dataNascimento: Date;
-  sexo: string;
-  esatdoCivil: string;
-  documento: string;
-  telefone: string;
-  status: "ativo" | "inativo";
-  dataCadastro: string;
+  descricao: string;
+  preco: number;
+  grupo: string | null;
+  estoque: number;
+  ativo: boolean;
+  categoria: string;
 }
 
-export default function Clientes() {
-  const router = useRouter(); // Instanciar router
-  const [clientes, setClientes] = useState<Cliente[]>([]);
+export default function Produtos() {
+  const router = useRouter();
+  const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Status filter pode ser expandido futuramente, mantido para consistência visual
   const [statusFilter, setStatusFilter] = useState("todos");
 
   useEffect(() => {
-    const fetchClientes = async () => {
+    const fetchProdutos = async () => {
       try {
-        const response = await api.get("/clientes").catch(() => null);
+        const response = await api.get("/produtos").catch(() => null);
 
         if (response && Array.isArray(response.data)) {
-          const dadosFormatados = response.data.map((item: any) => ({
-            ...item,
-            status: item.ativo ? "ativo" : "inativo",
-          }));
-          setClientes(dadosFormatados);
+          setProdutos(response.data);
         }
       } catch (error) {
-        console.error("Erro ao carregar clientes:", error);
+        console.error("Erro ao carregar produtos:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchClientes();
+    fetchProdutos();
   }, []);
 
-  const filteredClientes = clientes.filter((cliente) => {
+  const filteredProdutos = produtos.filter((produto) => {
+    const term = searchTerm.toLowerCase();
     const matchesSearch =
-      (cliente.nome || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (cliente.email || "").toLowerCase().includes(searchTerm.toLowerCase());
+      (produto.descricao || "").toLowerCase().includes(term) ||
+      (produto.categoria || "").toLowerCase().includes(term) ||
+      (produto.grupo || "").toLowerCase().includes(term);
+
     const matchesStatus =
-      statusFilter === "todos" || cliente.status === statusFilter;
+      statusFilter === "todos" ||
+      (statusFilter === "ativo" && produto.ativo) ||
+      (statusFilter === "inativo" && !produto.ativo);
+
     return matchesSearch && matchesStatus;
   });
 
   return (
     <div className="bg-white text-slate-600 font-sans text-sm min-h-full flex flex-col h-screen overflow-hidden">
-      {/* HEADER*/}
+      {/* HEADER */}
       <header className="h-14 border-b border-slate-200 flex items-center justify-between px-6 bg-white shrink-0">
         <div className="flex items-center text-slate-500 text-sm gap-2">
           <Home className="w-4 h-4" />
           <span className="text-slate-300">|</span>
           <span>Cadastros</span>
           <span className="text-slate-300">|</span>
-          <span className="text-blue-600 font-medium">Clientes</span>
+          <span className="text-blue-600 font-medium">Produtos</span>
         </div>
 
         <div className="flex items-center gap-4">
-          {/* em desenvolvimento*/}
           <div className="flex items-center gap-3 text-slate-400 pl-4">
             <Menu className="w-5 h-5 cursor-pointer hover:text-slate-600" />
             <Settings className="w-5 h-5 cursor-pointer hover:text-slate-600" />
@@ -96,26 +87,26 @@ export default function Clientes() {
 
       {/* ÁREA DE CONTEÚDO */}
       <div className="flex-1 overflow-y-auto p-6 bg-slate-50/50">
-        {/* BARRA DE AÇÕES (Sem Exportar/Tabelas) */}
+        {/* BARRA DE AÇÕES */}
         <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-4">
-          {/* Input de Busca + Botão Filtro */}
+          {/* Input de Busca */}
           <div className="flex w-full md:max-w-md">
             <input
               type="text"
-              placeholder="Nome do cliente"
+              placeholder="Nome, categoria ou grupo..."
               className="w-full border border-slate-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
-          {/* */}
+          {/* Botão Novo */}
           <div className="flex items-center gap-2 w-full md:w-auto">
             <button
-              onClick={() => router.push("/clientes/novo")}
-              className="flex items-center gap-2 px-4 py-2 bg-[#0f284e] text-white text-sm font-medium rounded hover:bg-slate-800 transition shadow-sm"
+              onClick={() => router.push("/produtos/novo")}
+              className="flex items-center gap-2 px-4 py-2 bg-[#0f284e] text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition shadow-sm"
             >
-              <Plus className="w-4 h-4" /> Novo cliente
+              <Plus className="w-4 h-4" /> Novo produto
             </button>
           </div>
         </div>
@@ -129,16 +120,16 @@ export default function Clientes() {
                   Código
                 </th>
                 <th className="px-4 py-3 border-b border-slate-200 cursor-pointer hover:bg-slate-200">
-                  Cliente{" "}
+                  Produto{" "}
                   <span className="text-[10px] text-slate-400 font-normal lowercase ml-1">
-                    Razão social
+                    Categoria
                   </span>
                 </th>
                 <th className="px-4 py-3 border-b border-slate-200 cursor-pointer hover:bg-slate-200">
-                  Natureza
+                  Preço
                 </th>
                 <th className="px-4 py-3 border-b border-slate-200 cursor-pointer hover:bg-slate-200">
-                  CPF/CNPJ / Telefone
+                  Estoque
                 </th>
                 <th className="px-4 py-3 border-b border-slate-200 cursor-pointer hover:bg-slate-200">
                   Status
@@ -153,45 +144,58 @@ export default function Clientes() {
                     Carregando registros...
                   </td>
                 </tr>
-              ) : filteredClientes.length === 0 ? (
+              ) : filteredProdutos.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="p-8 text-center text-slate-400">
-                    Nenhum registro encontrado.
+                    Nenhum produto encontrado.
                   </td>
                 </tr>
               ) : (
-                filteredClientes.map((cliente, index) => (
+                filteredProdutos.map((produto, index) => (
                   <tr
-                    key={cliente.id}
-                    // Adicionado onClick e cursor-pointer
-                    onClick={() => router.push(`/clientes/${cliente.id}`)}
-                    className={`hover:bg-blue-50/50 transition-colors group cursor-pointer ${index % 2 === 0 ? "bg-white" : "bg-slate-50/30"}`}
+                    key={produto.id}
+                    onClick={() => router.push(`/produtos/${produto.id}`)}
+                    className={`hover:bg-blue-50/50 transition-colors group cursor-pointer ${
+                      index % 2 === 0 ? "bg-white" : "bg-slate-50/30"
+                    }`}
                   >
-                    <td className="px-4 py-3 text-slate-600">{cliente.id}</td>
+                    <td className="px-4 py-3 text-slate-600">{produto.id}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-col">
                         <span className="text-slate-800 font-medium">
-                          {cliente.nome}
+                          {produto.descricao}
                         </span>
                         <span className="text-xs text-slate-500">
-                          {cliente.email}
+                          {produto.categoria}
+                          {produto.grupo ? ` • ${produto.grupo}` : ""}
                         </span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">
-                      {cliente.natureza}
+                    <td className="px-4 py-3 text-slate-600 font-mono">
+                      {Number(produto.preco).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
                     </td>
-                    <td className="px-4 py-3 text-slate-600 font-mono text-xs">
-                      {cliente.documento}
+                    <td className="px-4 py-3 text-slate-600">
+                      {Number(produto.estoque).toLocaleString("pt-BR", {
+                        minimumFractionDigits: 0,
+                      })}
                     </td>
                     <td className="px-4 py-3">
                       <span
-                        className={`${cliente.status === "ativo" ? "text-slate-700" : "text-red-600"} text-xs font-medium`}
+                        className={`${
+                          produto.ativo ? "text-slate-700" : "text-red-600"
+                        } text-xs font-medium`}
                       >
-                        {cliente.status === "ativo" ? "Ativo" : "Inativo"}
+                        {produto.ativo ? "Ativo" : "Inativo"}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right"></td>
+                    <td className="px-4 py-3 text-right">
+                      <button className="p-1 text-slate-400 hover:text-blue-600 rounded">
+                        <MoreVertical className="w-4 h-4" />
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}
@@ -207,8 +211,8 @@ export default function Clientes() {
 
             <div className="flex items-center gap-4">
               <span>
-                1 - {filteredClientes.length} de {filteredClientes.length}{" "}
-                clientes
+                1 - {filteredProdutos.length} de {filteredProdutos.length}{" "}
+                produtos
               </span>
               <div className="flex items-center border border-slate-200 rounded overflow-hidden">
                 <button

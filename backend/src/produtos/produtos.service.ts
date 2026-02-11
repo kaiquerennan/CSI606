@@ -26,4 +26,36 @@ export class ProdutosService {
       where: { id },
     });
   }
+
+  async create(data: {
+    descricao: string;
+    preco: number;
+    grupo: string;
+    estoque: number | any; // Permite number ou Decimal
+    ativo: boolean;
+    categoria: string;
+  }): Promise<Produto> {
+    return this.prisma.produto.create({
+      data: {
+        ...data,
+        estoque: Number(data.estoque), // Garante que seja numérico
+      },
+    });
+  }
+
+  async update(id: number, data: Partial<Produto>): Promise<Produto> {
+    const produto = await this.prisma.produto.findUnique({ where: { id } });
+
+    if (!produto) {
+      throw new NotFoundException(`Produto ${id} não encontrado`);
+    }
+
+    return this.prisma.produto.update({
+      where: { id },
+      data: {
+        ...data,
+        estoque: data.estoque ? Number(data.estoque) : undefined,
+      },
+    });
+  }
 }

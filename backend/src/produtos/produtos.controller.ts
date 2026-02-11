@@ -1,6 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { ProdutosService } from './produtos.service';
-import { Get, Post, Delete, Put, Param } from '@nestjs/common';
+import { Get, Post, Delete, Put, Param, Body } from '@nestjs/common';
+import type { Produto } from '../../generated/prisma';
 
 @Controller('produtos')
 export class ProdutosController {
@@ -19,5 +20,16 @@ export class ProdutosController {
   @Delete('id')
   async delete(@Param('id') id: string) {
     return this.produtosService.delete(Number(id));
+  }
+
+  @Post()
+  async create(@Body() data: any) {
+    // Mudado para any temporariamente ou crie um DTO
+    return this.produtosService.create(data);
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() data: any) {
+    return this.produtosService.update(Number(id), data);
   }
 }
