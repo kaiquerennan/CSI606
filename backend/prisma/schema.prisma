@@ -58,3 +58,12 @@ model itensVendas {
 
   @@map("itens_vendas")
 }
+
+model Administrador {
+  id       Int      @id @default(autoincrement())
+  nome     String
+  email    String   @unique
+  senha    String
+  ativo    Boolean  @default(true)
+  criadoEm DateTime @default(now())
+}

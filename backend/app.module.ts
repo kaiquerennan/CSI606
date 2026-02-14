@@ -7,6 +7,7 @@ import { ProdutosModule } from './src/produtos/produtos.module';
 import { AuthModule } from './src/auth/auth.module';
 import { RelatoriosModule } from './src/relatorios/relatorios.module';
 import { VendasModule } from './src/vendas/vendas.module';
+import { AdminModule } from './src/admin/admin.module';
 @Module({
   imports: [
     ClientesModule,
@@ -15,6 +16,7 @@ import { VendasModule } from './src/vendas/vendas.module';
     AuthModule,
     RelatoriosModule,
     VendasModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
