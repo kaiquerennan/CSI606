@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/components/sidebar"; // Verifique o caminho do import
+import { AuthProvider } from "@/lib/auth-context";
+import { AppShell } from "@/components/app-shell";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,13 +19,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${inter.className} bg-slate-50 text-slate-900`}>
-        <div className="flex min-h-screen">
-          {/* A Sidebar é fixa (fixed) dentro do componente dela */}
-          <Sidebar />
-
-          {/* O conteúdo principal é empurrado 280px para a direita */}
-          <main className="flex-1 ml-[280px]">{children}</main>
-        </div>
+        <AuthProvider>
+          <AppShell>{children}</AppShell>
+        </AuthProvider>
       </body>
     </html>
   );

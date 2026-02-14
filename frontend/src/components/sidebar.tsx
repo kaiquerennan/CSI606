@@ -10,18 +10,22 @@ import {
   LogOut,
   Home,
   FileBarChart,
+  ShieldCheck,
 } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
 
 export function Sidebar() {
-  const pathname = usePathname(); // Pega a URL atual (ex: /clientes)
+  const pathname = usePathname();
+  const { admin, logout } = useAuth();
 
   // Lista de rotas
   const menuItems = [
-    { href: "/", icon: Home, label: "Dashboard" }, // Ajuste se sua home for /dashboard
+    { href: "/", icon: Home, label: "Dashboard" },
     { href: "/clientes", icon: Users, label: "Clientes" },
-    { href: "/produtos", icon: Package, label: "Produtos" }, // Exemplo
-    { href: "/vendas", icon: ShoppingBag, label: "Vendas" }, // Exemplo
+    { href: "/produtos", icon: Package, label: "Produtos" },
+    { href: "/vendas", icon: ShoppingBag, label: "Vendas" },
     { href: "/relatorios", icon: FileBarChart, label: "Relatórios" },
+    { href: "/administradores", icon: ShieldCheck, label: "Administradores" },
   ];
 
   return (
@@ -38,8 +42,11 @@ export function Sidebar() {
       {/* Navegação Dinâmica */}
       <nav className="space-y-1 flex-1">
         {menuItems.map((item) => {
-          // Verifica se o link é o atual
-          const isActive = pathname === item.href;
+          // Verifica se o link é o atual (inclui sub-rotas)
+          const isActive =
+            item.href === "/"
+              ? pathname === "/"
+              : pathname === item.href || pathname.startsWith(item.href + "/");
 
           return (
             <Link
@@ -62,7 +69,18 @@ export function Sidebar() {
 
       {/* Footer */}
       <div className="mt-auto pt-6 border-t border-slate-100">
-        <button className="flex items-center gap-3 text-slate-500 hover:text-red-500 transition w-full">
+        {admin && (
+          <div className="mb-4 px-2">
+            <p className="text-sm font-semibold text-slate-700 truncate">
+              {admin.nome}
+            </p>
+            <p className="text-xs text-slate-400 truncate">{admin.email}</p>
+          </div>
+        )}
+        <button
+          onClick={logout}
+          className="flex items-center gap-3 text-slate-500 hover:text-red-500 transition w-full px-2"
+        >
           <LogOut className="w-5 h-5" /> Sair
         </button>
       </div>

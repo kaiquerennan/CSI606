@@ -272,7 +272,10 @@ export default function Dashboard() {
             </h3>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+          <div
+            onClick={() => router.push("/vendas")}
+            className="bg-white p-6 rounded-2xl shadow-sm border cursor-pointer border-slate-100"
+          >
             <div className="flex justify-between items-start mb-4">
               <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
                 <Clock />
@@ -303,7 +306,10 @@ export default function Dashboard() {
             </h3>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+          <div
+            onClick={() => router.push("/clientes")}
+            className="bg-white p-6 rounded-2xl shadow-sm cursor-pointer border border-slate-100"
+          >
             <div className="flex justify-between items-start mb-4">
               <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">
                 <Package />
