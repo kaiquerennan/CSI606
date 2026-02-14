@@ -28,8 +28,55 @@ export class RelatoriosController {
     const quantidadePedidos = quantidade ? Number(quantidade) : 3;
     return this.relatoriosService.ultimosPedidos(Number(quantidadePedidos));
   }
+
   @Get('status-pedidos')
   getStatusPedidos() {
     return this.relatoriosService.statusPedidos();
+  }
+
+  // ============= NOVOS ENDPOINTS =============
+
+  @Get('resumo')
+  getResumo() {
+    return this.relatoriosService.resumoRelatorios();
+  }
+
+  @Get('top-produtos')
+  getTopProdutos(@Query('limite') limite: string) {
+    return this.relatoriosService.topProdutos(limite ? Number(limite) : 10);
+  }
+
+  @Get('top-clientes')
+  getTopClientes(@Query('limite') limite: string) {
+    return this.relatoriosService.topClientes(limite ? Number(limite) : 10);
+  }
+
+  @Get('receita-por-categoria')
+  getReceitaPorCategoria() {
+    return this.relatoriosService.receitaPorCategoria();
+  }
+
+  @Get('estoque-baixo')
+  getEstoqueBaixo(@Query('limite') limite: string) {
+    return this.relatoriosService.produtosEstoqueBaixo(
+      limite ? Number(limite) : 10,
+    );
+  }
+
+  @Get('vendas-por-dia')
+  getVendasPorDia(@Query('dias') dias: string) {
+    return this.relatoriosService.vendasPorDia(dias ? Number(dias) : 30);
+  }
+
+  @Get('vendas-por-dia-semana')
+  getVendasPorDiaSemana() {
+    return this.relatoriosService.vendasPorDiaSemana();
+  }
+
+  @Get('clientes-por-mes')
+  getClientesPorMes(@Query('meses') meses: string) {
+    return this.relatoriosService.clientesNovosPorMes(
+      meses ? Number(meses) : 6,
+    );
   }
 }

@@ -9,6 +9,7 @@ import {
   ShoppingBag,
   LogOut,
   Home,
+  FileBarChart,
 } from "lucide-react";
 
 export function Sidebar() {
@@ -20,6 +21,7 @@ export function Sidebar() {
     { href: "/clientes", icon: Users, label: "Clientes" },
     { href: "/produtos", icon: Package, label: "Produtos" }, // Exemplo
     { href: "/vendas", icon: ShoppingBag, label: "Vendas" }, // Exemplo
+    { href: "/relatorios", icon: FileBarChart, label: "Relatórios" },
   ];
 
   return (

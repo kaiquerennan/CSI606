@@ -83,11 +83,9 @@ export default function ProdutoDetalhe() {
 
       if (id === "novo") {
         await api.post("/produtos", payload);
-        alert("Produto criado com sucesso!");
         router.push("/produtos");
       } else {
         await api.put(`/produtos/${id}`, payload);
-        alert("Produto atualizado com sucesso!");
         router.push("/produtos");
       }
     } catch (error) {
