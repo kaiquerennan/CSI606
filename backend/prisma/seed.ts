@@ -158,6 +158,23 @@ async function main() {
     });
   }
 
+  console.log('🔐 Criando administrador padrão...');
+
+  const senhaAdmin = await bcrypt.hash('admin123', 10);
+
+  const admin = await prisma.administrador.upsert({
+    where: { email: 'admin@salespro.com' },
+    update: {},
+    create: {
+      nome: 'Administrador',
+      email: 'admin@salespro.com',
+      senha: senhaAdmin,
+      ativo: true,
+    },
+  });
+
+  console.log(`   Admin criado: ${admin.email} / admin123`);
+
   console.log('✅ Seed finalizado com sucesso!');
 }
 

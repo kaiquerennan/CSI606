@@ -92,5 +92,8 @@
       "@nestjs/core",
       "@swc/core"
     ]
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }
