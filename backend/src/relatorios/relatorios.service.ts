@@ -176,9 +176,6 @@ export class RelatoriosService {
     return clientes;
   }
 
-  /**
-   * Receita por categoria de produto
-   */
   async receitaPorCategoria() {
     const receita = await this.prisma.$queryRaw<any[]>`
       SELECT p.categoria,
@@ -193,9 +190,6 @@ export class RelatoriosService {
     return receita;
   }
 
-  /**
-   * Produtos com estoque baixo (alerta de reposição)
-   */
   async produtosEstoqueBaixo(limiteEstoque: number = 10) {
     const produtos = await this.prisma.produto.findMany({
       where: {
