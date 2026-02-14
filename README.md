@@ -65,19 +65,13 @@ npm install
 npx prisma migrate dev
 ```
 
-### 5. Popular o banco com dados de exemplo (seed)
+### 5. Popular o banco com dados de exemplo e criar administrador
 
 ```bash
 npx prisma db seed
 ```
 
-Para criar o administrador padrão:
-
-```bash
-export $(grep -v '^#' .env | head -1 | xargs) && npx tsx prisma/seed-admin.ts
-```
-
-> **Credenciais padrão:** `admin@salespro.com` / `admin123`
+> **Credenciais do admin:** `admin@salespro.com` / `admin123`
 
 ### 6. Iniciar o backend
 
