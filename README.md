@@ -1,200 +1,109 @@
-# CSI606-2025-01 - Proposta de Trabalho Final
+# CSI606-2025-02 - Trabalho Final - Resultados
 
 **Discente:** Kaique Rennan - 23.1.8046
 
-# 📊 SalesPro — Dashboard de Análise de Vendas
+---
 
-Este projeto consiste no desenvolvimento de um **Dashboard Interativo de Análise de Vendas**, projetado para transformar dados brutos em _insights_ acionáveis. Meu objetivo é fornecer uma ferramenta para visualizar, monitorar e analisar o desempenho de vendas da organização, facilitando a tomada de decisões estratégicas.
+## Resumo
+
+Este trabalho consiste no desenvolvimento do **SalesPro**, um Dashboard Interativo de Análise de Vendas construído como uma aplicação web fullstack. O sistema permite que administradores autenticados gerenciem clientes, produtos e vendas, além de visualizar relatórios com gráficos interativos sobre o desempenho comercial. O backend foi desenvolvido com **NestJS** e **Prisma ORM** conectado a um banco **PostgreSQL**, enquanto o frontend utiliza **Next.js 16** com **React 19**, **Tailwind CSS 4** e **Chart.js** para visualização de dados.
 
 ---
 
-## 🖥️ Tecnologias
+## 1. Funcionalidades implementadas
 
-| Camada       | Tecnologia                           |
-| ------------ | ------------------------------------ |
-| **Frontend** | Next.js 16, React 19, Tailwind CSS 4 |
-| **Backend**  | NestJS 11, Prisma ORM, TypeScript    |
-| **Banco**    | PostgreSQL 15 (Docker)               |
-| **Gráficos** | Chart.js + react-chartjs-2           |
-| **HTTP**     | Axios                                |
-| **Ícones**   | Lucide React                         |
+- **Autenticação de Administradores:** Tela de login com validação de e-mail e senha. Somente administradores cadastrados têm acesso ao sistema.
+- **Dashboard Principal:** Visão geral com KPIs (total de vendas, receita, clientes, produtos), gráficos de vendas por mês, status de pedidos e listagem dos últimos pedidos.
+- **Gestão de Clientes:** Listagem com busca e filtro por status (ativo/inativo), visualização detalhada e navegação para perfil individual.
+- **Gestão de Produtos:** Listagem com busca por nome, categoria ou grupo, filtro por status, paginação e opção de cadastro de novos produtos.
+- **Módulo de Vendas:** Listagem de todas as vendas com detalhes (cliente, itens, valor, status), modal de detalhamento e possibilidade de cancelamento (com devolução automática de estoque).
+- **Relatórios:** Página com 4 abas (Visão Geral, Vendas, Produtos, Clientes) contendo gráficos interativos — barras (receita mensal, dia da semana), linhas (vendas diárias), rosca (categorias, status de pedidos) — e tabelas com ranking de produtos, clientes, estoque baixo e receita por categoria.
+- **CRUD de Administradores:** Listagem, criação, edição e exclusão de administradores do sistema.
+- **Sidebar Responsiva:** Navegação lateral com destaque da rota ativa, informações do admin logado e botão de logout.
 
 ---
 
-## 📦 Pré-requisitos
+## 2. Funcionalidades previstas e não implementadas
 
-Antes de começar, certifique-se de ter instalado:
+- **Exportação de Dados (PDF/CSV):** Prevista na proposta, porém não implementada por questão de tempo. Os relatórios são exibidos apenas na interface web.
+- **Filtros por Região Geográfica e Canal de Venda:** Ficou limitada a categoria de produto e período. Filtros por região e canal não foram implementados.
+
+---
+
+## 3. Outras funcionalidades implementadas
+
+- **Tela de nova venda:** Mão estava previsto no início, mas foi implementada uma página para realizar novas vendas com busca de cliente, busca de produto controle de quantidade e cálculo automático de totais.
+
+- **Controle de Estoque Automático:** Ao registrar uma venda, o estoque dos produtos é decrementado automaticamente. Ao cancelar, o estoque é devolvido.
+- **Avatar Dinâmico:** O nome do administrador logado é exibido em todas as telas com avatar gerado automaticamente via API ui-avatars.
+- **Logo Personalizada:** Substituição do ícone padrão por imagem customizada na sidebar.
+
+---
+
+## 4. Principais desafios e dificuldades
+
+- **Configuração do Prisma:** Esse projeto foi criado bem no meio da migração do Prisma para a versão 7, então foi difícil de configurar. Muita coisa ainda estava mudando, vários exemplos não funcionavam mais e a documentação nem sempre ajudava do jeito esperado.
+- **Conectar no Banco:** Tive dificuldade no início tentando vincular o docker ao PostgreSQL. Entre erros de autenticação e tabelas que "não existiam", perdi um bom tempo só garantindo que o NestJS conseguisse falar com o banco de dados.
+- **Rodar o Seed:** Tive muita dificuldade para fazer o script de seed (popular o banco com dados de teste) funcionar. O comando falhava o tempo todo por conflitos de configuração com o TypeScript, e precisei mudar coisas no package.json até conseguir inserir os dados iniciais.
+- **Dificuldade com o CSS**: Fazer a Sidebar ficar fixa sem quebrar o resto do layout deu trabalho. Tive bastante problemas com margens, espaços em branco aleatórios e a responsividade do Flexbox no Next.js.
+
+---
+
+## 5. Instruções para instalação e execução
+
+### Pré-requisitos
 
 - [Node.js](https://nodejs.org/) >= 20
 - [npm](https://www.npmjs.com/) >= 10
 - [Docker](https://www.docker.com/) e Docker Compose
 
----
-
-## 🚀 Como Rodar o Projeto
-
-### 1. Clonar o repositório
+### Passo a passo
 
 ```bash
+# 1. Clonar o repositório
 git clone https://github.com/kaiquerennan/CSI606.git
 cd CSI606
-```
 
-### 2. Subir o banco de dados
-
-```bash
+# 2. Subir o banco de dados
 cd backend
 docker compose up -d
-```
 
-> O PostgreSQL estará disponível em `localhost:5432` com usuário `postgres` e senha `postgres`.
+# 3. Criar arquivo de ambiente do backend (backend/.env)
+echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/meubanco?schema=public" > .env
 
-### 3. Configurar variáveis de ambiente do backend
-
-Crie o arquivo `backend/.env`:
-
-```env
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/meubanco?schema=public
-```
-
-### 4. Instalar dependências e rodar migrations do backend
-
-```bash
-cd backend
+# 4. Instalar dependências e rodar migrations
 npm install
 npx prisma migrate dev
-```
 
-### 5. Popular o banco com dados de exemplo e criar administrador
-
-```bash
+# 5. Popular o banco com dados de exemplo + admin
 npx prisma db seed
-```
 
-> **Credenciais do admin:** `admin@salespro.com` / `admin123`
-
-### 6. Iniciar o backend
-
-```bash
+# 6. Iniciar o backend
 npm run start:dev
-```
+# Backend rodando em http://localhost:3334
 
-> O backend estará rodando em `http://localhost:3334`.
-
-### 7. Configurar variáveis de ambiente do frontend
-
-Crie o arquivo `frontend/.env.local`:
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:3334
-```
-
-### 8. Instalar dependências e iniciar o frontend
-
-```bash
-cd frontend
+# 7. Em outro terminal, configurar e iniciar o frontend
+cd ../frontend
+echo "NEXT_PUBLIC_API_URL=http://localhost:3334" > .env.local
 npm install
 npm run dev
+# Frontend rodando em http://localhost:3000
 ```
 
-> O frontend estará rodando em `http://localhost:3000`.
+### Credenciais de acesso
+
+| Campo      | Valor                |
+| ---------- | -------------------- |
+| **E-mail** | `admin@salespro.com` |
+| **Senha**  | `admin123`           |
 
 ---
 
-## 📁 Estrutura do Projeto
+## 6. Referências
 
-```
-CSI606/
-├── backend/                  # API NestJS
-│   ├── src/
-│   │   ├── admin/            # CRUD de administradores + login
-│   │   ├── auth/             # Autenticação
-│   │   ├── clientes/         # Módulo de clientes
-│   │   ├── dashboard/        # Dados do dashboard principal
-│   │   ├── prisma/           # Serviço Prisma
-│   │   ├── produtos/         # Módulo de produtos
-│   │   ├── relatorios/       # Relatórios e métricas
-│   │   ├── users/            # Módulo de usuários (clientes)
-│   │   └── vendas/           # Módulo de vendas
-│   ├── prisma/
-│   │   ├── schema.prisma     # Schema do banco de dados
-│   │   ├── seed.ts           # Seed de dados de exemplo
-│   │   └── migrations/       # Migrations do Prisma
-│   └── docker-compose.yaml   # PostgreSQL
-│
-├── frontend/                 # Interface Next.js
-│   └── src/
-│       ├── app/
-│       │   ├── login/        # Tela de login
-│       │   ├── clientes/     # Gestão de clientes
-│       │   ├── produtos/     # Gestão de produtos
-│       │   ├── vendas/       # Listagem + nova venda
-│       │   ├── relatorios/   # Relatórios com gráficos
-│       │   └── administradores/ # CRUD de admins
-│       ├── components/       # Sidebar, AppShell
-│       └── lib/              # API client, Auth context
-│
-├── .editorconfig
-├── .gitignore
-├── LICENSE
-└── README.md
-```
-
----
-
-## 🔑 Funcionalidades
-
-- **Login** — Acesso restrito a administradores cadastrados
-- **Dashboard** — Visão geral com métricas e KPIs de vendas
-- **Clientes** — Cadastro e gerenciamento de clientes
-- **Produtos** — Cadastro e controle de estoque
-- **Vendas** — Registro de vendas com busca de cliente/produto e controle de estoque
-- **Relatórios** — Gráficos interativos (vendas por categoria, período, top produtos, etc.)
-- **Administradores** — CRUD de usuários do sistema
-
----
-
-## 1. Tema
-
-O trabalho final tem como tema o desenvolvimento de um **Dashboard Interativo para Análise de Vendas**.
-
-O foco é a **visualização e análise do desempenho de vendas**, fornecendo uma visão clara e consolidada das métricas mais importantes para a área comercial.
-
----
-
-## 2. Escopo e Funcionalidades
-
-Este projeto implementará as seguintes funcionalidades principais:
-
-### Dados
-
-| Categoria | Funcionalidade           | Descrição                                                                                                    |
-| --------: | ------------------------ | ------------------------------------------------------------------------------------------------------------ |
-|  **Data** | **Conexão e ETL Básico** | Conexão com a fonte de dados de vendas (banco de dados) e processamento (limpeza e transformação) dos dados. |
-
-### Segmentação e Interatividade
-
-|          Categoria | Funcionalidade             | Descrição                                                                                                                    |
-| -----------------: | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-|    **Segmentação** | **Filtros e Detalhamento** | Análise de vendas segmentada por: **Categoria de Produto**, **Região Geográfica**, **Canal de Venda** e **Vendedor/Equipe**. |
-| **Interatividade** | **Filtros Dinâmicos**      | Implementação de filtros (data, segmento) que atualizam o dashboard em tempo real, garantindo uma análise flexível.          |
-
-### Relatórios
-
-|      Categoria | Funcionalidade          | Descrição                                                                                     |
-| -------------: | ----------------------- | --------------------------------------------------------------------------------------------- |
-| **Relatórios** | **Exportação de Dados** | Funcionalidade para exportar visualizações ou tabelas de dados subjacentes (ex.: PDF ou CSV). |
-
----
-
-## 3. Restrições
-
-Para manter o foco e garantir a entrega dentro do prazo, as seguintes funcionalidades **não** serão consideradas neste projeto:
-
-- **Previsão de Vendas:** Não serão incluídos modelos estatísticos ou de _Machine Learning_ para projeção de vendas futuras.
-- **Integração de Escrita:** A ferramenta será estritamente _read-only_. Não haverá possibilidade de inserir, editar ou excluir dados na fonte de origem (CRM/ERP).
-- **Aplicativo Móvel** O desenvolvimento será focado na **interface web** (desktop e tablet). Não haverá criação de um app móvel nativo.
-
-## 4. Protótipos
-
-Protótipos para as páginas (Principal e de relatórios) foram elaborados, e podem ser encontrados [aqui](https://www.figma.com/design/6zpmOL3MxSq4GYYT65mZMo/Prot%C3%B3tipo-Web?node-id=0-1&t=4pVHn5Hz0aKszpfG-1)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [NestJS Documentation](https://docs.nestjs.com/)
+- [Prisma ORM Documentation](https://www.prisma.io/docs)
+- [Chart.js Documentation](https://www.chartjs.org/docs/)
+- [react-chartjs-2](https://react-chartjs-2.js.org/)
+- [Tailwind CSS](https://tailwindcss.com/docs)
