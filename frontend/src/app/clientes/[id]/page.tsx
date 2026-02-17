@@ -266,8 +266,7 @@ export default function ClienteDetalhe() {
             {/* LINHA 3 */}
             <div>
               <label className="block text-xs text-slate-500 mb-1">
-                Data de nascimento{" "}
-                <span className="text-[10px]">(Visual apenas)</span>
+                Data de nascimento <span className="text-[10px]"></span>
               </label>
               <input
                 type="date"

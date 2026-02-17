@@ -209,8 +209,6 @@ export default function Dashboard() {
   };
 
   return (
-    // REMOVIDO: "flex min-h-screen" e a tag <main> interna.
-    // O Layout Global já define a estrutura. Aqui retornamos apenas o bloco de conteúdo.
     <div className="bg-slate-50 text-slate-900 w-full min-h-full">
       {/* HEADER */}
       <header className="bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-slate-200 p-4 flex justify-between items-center px-8">
@@ -240,9 +238,7 @@ export default function Dashboard() {
       <div className="p-8 max-w-7xl mx-auto">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-slate-800">Visão Geral</h2>
-          <p className="text-slate-500 text-sm">
-            Bem-vindo de volta! Veja os dados reais do seu NestJS.
-          </p>
+          <p className="text-slate-500 text-sm">Bem-vindo de volta!</p>
         </div>
 
         {/* CARDS */}

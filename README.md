@@ -53,8 +53,6 @@ Este trabalho consiste no desenvolvimento do **SalesPro**, um Dashboard Interati
 
 ### Pré-requisitos
 
-- [Node.js](https://nodejs.org/) >= 20
-- [npm](https://www.npmjs.com/) >= 10
 - [Docker](https://www.docker.com/) e Docker Compose
 
 ### Passo a passo
@@ -64,30 +62,31 @@ Este trabalho consiste no desenvolvimento do **SalesPro**, um Dashboard Interati
 git clone https://github.com/kaiquerennan/CSI606.git
 cd CSI606
 
-# 2. Subir o banco de dados
-cd backend
-docker compose up -d
+# 2. Subir todos os serviços (banco, backend e frontend)
+docker compose up --build -d
 
-# 3. Criar arquivo de ambiente do backend (backend/.env)
-echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/meubanco?schema=public" > .env
+# 3. Rodar as migrations do banco de dados
+docker compose exec backend npx prisma migrate deploy
 
-# 4. Instalar dependências e rodar migrations
-npm install
-npx prisma migrate dev
+# 4. Popular o banco com dados de exemplo + admin
+docker compose exec backend npx tsx prisma/seed.ts
+```
 
-# 5. Popular o banco com dados de exemplo + admin
-npx prisma db seed
+Após esses passos, a aplicação estará disponível em:
 
-# 6. Iniciar o backend
-npm run start:dev
-# Backend rodando em http://localhost:3334
+- **Frontend:** http://localhost:3000
+- **Backend:** http://localhost:3334
 
-# 7. Em outro terminal, configurar e iniciar o frontend
-cd ../frontend
-echo "NEXT_PUBLIC_API_URL=http://localhost:3334" > .env.local
-npm install
-npm run dev
-# Frontend rodando em http://localhost:3000
+Para parar todos os serviços:
+
+```bash
+docker compose down
+```
+
+Para parar e **remover os dados do banco**:
+
+```bash
+docker compose down -v
 ```
 
 ### Credenciais de acesso

@@ -231,7 +231,7 @@ export default function ProdutoDetalhe() {
             </div>
           </div>
 
-          {/* Seção Dados de Valor/Estoque (Simplificado para caber no schema atual) */}
+          {/* Seção Dados de Valor/Estoque  */}
           <div>
             <h2 className="text-base font-bold text-slate-800 mb-4 border-b border-slate-100 pb-2 mt-6">
               Informações de Venda e Estoque
