@@ -8,7 +8,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
   const pathname = usePathname();
 
-  // Na página de login, não mostra sidebar
   if (pathname === "/login" || !isAuthenticated) {
     return <>{children}</>;
   }

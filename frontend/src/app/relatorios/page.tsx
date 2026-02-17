@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth-context";
 import {
-  Search,
   Bell,
   TrendingUp,
   TrendingDown,
@@ -180,6 +180,7 @@ export default function RelatoriosPage() {
   });
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabKey>("visao-geral");
+  const { admin } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -239,9 +240,7 @@ export default function RelatoriosPage() {
     );
   }
 
-  // ==================== CHART DATA ====================
-
-  // Vendas por dia (line chart)
+  // Vendas por dia
   const vendasDiaChart = {
     labels: data.vendasDia.map((v) => {
       const d = new Date(v.dia + "T00:00:00");
@@ -1110,14 +1109,7 @@ export default function RelatoriosPage() {
     <div className="bg-slate-50 text-slate-900 w-full min-h-full">
       {/* HEADER */}
       <header className="bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-slate-200 p-4 flex justify-between items-center px-8">
-        <div className="flex items-center bg-slate-100 px-3 py-2 rounded-lg w-96">
-          <Search className="w-4 h-4 text-slate-400 mr-2" />
-          <input
-            type="text"
-            placeholder="Buscar relatório..."
-            className="bg-transparent border-none outline-none text-sm w-full focus:ring-0"
-          />
-        </div>
+        <h1 className="text-lg font-semibold text-slate-800">Relatórios</h1>
         <div className="flex items-center gap-4">
           <button className="relative p-2 text-slate-400 hover:bg-slate-100 rounded-full transition">
             <Bell className="w-5 h-5" />
@@ -1126,12 +1118,12 @@ export default function RelatoriosPage() {
           <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
             <div className="text-right">
               <p className="text-sm font-semibold text-slate-800">
-                Kaique Silva
+                {admin?.nome || "Admin"}
               </p>
               <p className="text-xs text-slate-500">Administrador</p>
             </div>
             <img
-              src="https://ui-avatars.com/api/?name=Kaique+Silva&background=0D8ABC&color=fff"
+              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(admin?.nome || "Admin")}&background=0D8ABC&color=fff`}
               className="w-10 h-10 rounded-full shadow-sm"
               alt="Avatar"
             />

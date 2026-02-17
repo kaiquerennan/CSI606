@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push("/login");
   };
 
-  // Enquanto não carregou do localStorage, não renderiza nada (evita flash)
+
   if (!loaded) {
     return null;
   }

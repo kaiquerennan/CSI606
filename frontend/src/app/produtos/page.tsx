@@ -3,14 +3,14 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth-context";
 import {
   MoreVertical,
   Plus,
   Home,
   ChevronLeft,
   ChevronRight,
-  Menu,
-  Settings,
+  Bell,
 } from "lucide-react";
 
 interface Produto {
@@ -25,6 +25,7 @@ interface Produto {
 
 export default function Produtos() {
   const router = useRouter();
+  const { admin } = useAuth();
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,9 +79,22 @@ export default function Produtos() {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3 text-slate-400 pl-4">
-            <Menu className="w-5 h-5 cursor-pointer hover:text-slate-600" />
-            <Settings className="w-5 h-5 cursor-pointer hover:text-slate-600" />
+          <button className="relative p-2 text-slate-400 hover:bg-slate-100 rounded-full transition">
+            <Bell className="w-5 h-5" />
+            <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+          </button>
+          <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
+            <div className="text-right">
+              <p className="text-sm font-semibold text-slate-800">
+                {admin?.nome || "Admin"}
+              </p>
+              <p className="text-xs text-slate-500">Administrador</p>
+            </div>
+            <img
+              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(admin?.nome || "Admin")}&background=0D8ABC&color=fff`}
+              className="w-9 h-9 rounded-full shadow-sm"
+              alt="Avatar"
+            />
           </div>
         </div>
       </header>

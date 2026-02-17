@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
   Users,
   Package,
   ShoppingBag,
@@ -32,8 +32,8 @@ export function Sidebar() {
     // CORREÇÃO 1: Largura w-[280px] para fechar o buraco branco
     <aside className="w-[280px] bg-white border-r border-slate-200 h-screen fixed top-0 left-0 flex flex-col p-6 z-20">
       {/* Logo */}
-      <div className="flex items-center gap-2 mb-10 text-blue-600">
-        <LayoutDashboard className="w-8 h-8" />
+      <div className="flex items-center gap-2 mb-10">
+        <Image src="/icon.png" alt="SalesPro" width={32} height={32} />
         <span className="text-xl font-bold tracking-tight text-slate-800">
           SalesPro
         </span>

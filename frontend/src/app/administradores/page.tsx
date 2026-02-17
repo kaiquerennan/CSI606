@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/lib/auth-context";
 import React, { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import {
@@ -10,7 +11,7 @@ import {
   Trash2,
   ShieldCheck,
   X,
-  Eye,
+  Eye,  
   EyeOff,
 } from "lucide-react";
 
@@ -23,6 +24,7 @@ interface Administrador {
 }
 
 export default function AdministradoresPage() {
+  const { admin } = useAuth();
   const [admins, setAdmins] = useState<Administrador[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -167,7 +169,7 @@ export default function AdministradoresPage() {
           <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
             <div className="text-right">
               <p className="text-sm font-semibold text-slate-800">
-                Kaique Silva
+                {admin?.nome || "Admin"}
               </p>
               <p className="text-xs text-slate-500">Administrador</p>
             </div>
